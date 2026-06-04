@@ -1,0 +1,45 @@
+{
+  "apiVersion": "2026-04",
+  "stores": [
+    {
+      "name": "Store A",
+      "domain": "store-a.myshopify.com",
+      "currency": "SEK",
+      "status": "active",
+      "clientId": "...",
+      "clientSecret": "..."
+    },
+    {
+      "name": "Store B",
+      "domain": "store-b.myshopify.com",
+      "currency": "SEK",
+      "status": "active",
+      "clientId": "...",
+      "clientSecret": "..."
+    },
+    {
+      "name": "Store C",
+      "domain": "store-c.myshopify.com",
+      "currency": "SEK",
+      "status": "active",
+      "clientId": "...",
+      "clientSecret": "..."
+    },
+    {
+      "name": "Store D DK",
+      "domain": "store-d.myshopify.com",
+      "currency": "DKK",
+      "status": "active",
+      "clientId": "...",
+      "clientSecret": "..."
+    },
+    {
+      "name": "Store E",
+      "domain": "store-e.myshopify.com",
+      "currency": "SEK",
+      "status": "paused",
+      "clientId": "...",
+      "clientSecret": "..."
+    }
+  ]
+}
