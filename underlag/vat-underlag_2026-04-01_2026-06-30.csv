@@ -1,0 +1,2 @@
+store,storeDomain,shipCountry,currency,orderCount,grossSales,refunds,netSales,vatCharged,vatRate,computedVatIfLiable,netExVatIfLiable
+Livsstilskompaniet,ktd0i9-89.myshopify.com,SE,SEK,6,1944.00,0.00,1944.00,0.00,25,388.80,1555.20

@@ -14,7 +14,19 @@
       "Bash(python3 *)",
       "Bash(kill *)",
       "Bash(wait)",
-      "Bash(echo *)"
+      "Bash(echo *)",
+      "mcp__claude_ai_Shopify__graphql_schema",
+      "mcp__claude_ai_Shopify__validate_graphql_codeblocks",
+      "Bash(cp -r underlag /tmp/underlag-run1)",
+      "Bash(npm run *)",
+      "Read(//tmp/**)",
+      "Bash(rm -rf /tmp/underlag-run1 && npm run build 2>&1 | tail -5 && echo \"BUILD EXIT: $?\" && ls dist/lib/vat-underlag/ 2>/dev/null | head)",
+      "mcp__claude_ai_Shopify__search_docs_chunks",
+      "Bash(cp -r underlag /tmp/underlag-before)",
+      "Bash(rm -rf /tmp/underlag-before)"
+    ],
+    "additionalDirectories": [
+      "/private/tmp/underlag-run1"
     ]
   }
 }

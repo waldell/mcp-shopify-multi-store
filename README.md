@@ -161,6 +161,78 @@ Restart Claude Desktop. The three tools appear under the `shopify-multistore` se
 
 ---
 
+## 5. VAT / payout reconciliation underlag
+
+A deterministic reporting layer on top of the fan-out. It produces two artifacts
+for the accountant handoff: a **VAT underlag** (sales grouped by store × ship
+country × currency) and a **payout reconciliation** (Nordea bank rows matched to
+Shopify payouts). All Shopify calls reuse the existing throttle-aware client; all
+business logic (aggregation, VAT math, reconciliation, CSV/JSON export) lives in
+the pure, network-free, clock-free module `src/lib/vat-underlag/`, imported by
+both the MCP tools and the CLI.
+
+### Transparency (why there is no "momsfri" total)
+
+These stores currently book dropshipping B2C sales **without VAT** (they are not
+IOSS-registered). Whether that is correct is the accountant's call, not this
+tool's. So every sales row carries **both** figures side by side:
+
+- `vatCharged` — the VAT actually charged (0 here), and
+- `computedVatIfLiable` — what output VAT *would* be if the sale were liable,
+  extracted **VAT-inclusively** from the price already charged
+  (`net × rate / (100 + rate)`), computed openly so the accountant can include or
+  exclude it.
+
+The tool never emits a single momsfri total and never hides VAT. Amounts are
+Decimal throughout (no floats), rounded to 2 dp half-up only at output, and
+totals are grouped **by currency** — never summed across SEK/DKK. VAT rates live
+in one place, `src/lib/vat-underlag/rates.ts` (verify current rates before
+filing; reduced 6/12 % rates are out of scope in v1).
+
+### ⚠️ Manual prerequisite — extra scopes + re-grant (you must do this once per store)
+
+The payout side needs two Shopify Payments scopes that are **not** in the base
+config: `read_shopify_payments_payouts` and `read_shopify_payments_accounts`. Add
+both to each store's custom app (Dev Dashboard → **Access** → Admin API
+integration → **Configure**, in the same scope fields as in §1 Step 3), **Save**,
+then **re-grant / re-install** the app on the store so the freshly minted token
+actually carries the new scopes — an existing token keeps its old scope set until
+the grant is refreshed. This applies to the **8 active stores**; **Loopies DK is
+paused** and likely has no Shopify Payments account, so its payout fan-out returns
+a null `shopifyPaymentsAccount` — the tool skips it and lists it under the report
+`notes` rather than crashing. Until a store is re-granted, its payout queries fail
+with a permissions error (surfaced per store, never crashing the batch); the VAT
+(orders) side needs no new scopes and works immediately.
+
+### CLI (the committed artifact)
+
+```bash
+# VAT underlag only, one store, Q2 2026:
+npm run vat-underlag -- --start 2026-04-01 --end 2026-06-30 --stores "Livsstilskompaniet"
+
+# All active stores + payout reconciliation against a Nordea CSV, Swedish decimals:
+npm run vat-underlag -- --start 2026-04-01 --end 2026-06-30 \
+  --bank ./nordea-q2.csv --decimal-comma --out ./underlag
+```
+
+Options: `--start`/`--end` (required, `YYYY-MM-DD`, inclusive), `--stores a,b,c`
+(default: all active), `--bank <csv>` (adds reconciliation), `--bank-currency`
+(default `SEK`), `--timezone` (default `Europe/Stockholm`, used for payout↔bank
+date matching), `--decimal-comma` (Swedish comma decimals; CSV delimiter switches
+to `;`), `--out <dir>` (default `./underlag`), and `--generated-at <ISO>` to fix
+the `generatedAt` stamp so committed output is **byte-identical** across runs.
+Reconciliation matches on **groups** — `(currency, date, net at full öre)` —
+never identity: equal counts reconcile (duplicates included), count mismatches go
+to an `att_granska` review list, and matches never cross currencies.
+
+### MCP tools
+
+- `get_vat_underlag({ start, end, stores? })` — the VAT underlag report as JSON.
+- `get_payout_reconciliation({ start, end, bankCsvPath, bankCurrency?, timezone?, stores? })`
+  — reconciled rows + `att_granska` exceptions as JSON.
+
+---
+
 ## Tool reference
 
 ### `list_stores`

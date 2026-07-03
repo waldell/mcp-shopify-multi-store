@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-07-02T00:00:00.000Z",
+  "period": {
+    "start": "2026-04-01",
+    "end": "2026-06-30"
+  },
+  "dateBasis": "order.createdAt",
+  "vatComputation": "inclusive",
+  "fxConversion": "none",
+  "scope": {
+    "testExcluded": true,
+    "financialStatusFilter": "all statuses included",
+    "refundAttribution": "refunds attributed to the order's createdAt period (v1 knob)"
+  },
+  "rows": [
+    {
+      "store": "Livsstilskompaniet",
+      "storeDomain": "ktd0i9-89.myshopify.com",
+      "shipCountry": "SE",
+      "currency": "SEK",
+      "orderCount": 6,
+      "grossSales": "1944.00",
+      "refunds": "0.00",
+      "netSales": "1944.00",
+      "vatCharged": "0.00",
+      "vatRate": "25",
+      "computedVatIfLiable": "388.80",
+      "netExVatIfLiable": "1555.20"
+    }
+  ],
+  "totalsByCurrency": [
+    {
+      "currency": "SEK",
+      "orderCount": 6,
+      "grossSales": "1944.00",
+      "refunds": "0.00",
+      "netSales": "1944.00",
+      "vatCharged": "0.00",
+      "computedVatIfLiable": "388.80",
+      "netExVatIfLiable": "1555.20"
+    }
+  ],
+  "notes": []
+}

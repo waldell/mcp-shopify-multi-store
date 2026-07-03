@@ -1,0 +1,2 @@
+currency,orderCount,grossSales,refunds,netSales,vatCharged,computedVatIfLiable,netExVatIfLiable
+SEK,6,1944.00,0.00,1944.00,0.00,388.80,1555.20
